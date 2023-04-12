@@ -57,11 +57,11 @@ float textFromDisplay2Float(String textFromDisplay){
  * 
  * @return ERROR_NONE on success
  */
-ERROR_CODE Screen_init(HardwareSerial& _stream, const uint32_t _baudRate_u32, const uint32_t _romSize_u32)
+ERROR_CODE Screen_init(HardwareSerial &_stream, const uint32_t _baudRate_u32 = 9600U, const uint32_t _romSize_u32 = 512U)
 {
 	myNex.begin(_baudRate_u32);		// khoi dong man hinh Nextion 
 
-	if (_stream.available() && EEPROM.begin(_romSize_u32))		// kiem tra ket noi voi man hinh va khoi dong EEPROM cua man hinh Nextion
+	if (/*_stream.available() && */EEPROM.begin(_romSize_u32))		// kiem tra ket noi voi man hinh va khoi dong EEPROM cua man hinh Nextion
 	{
 		log_e("Nextion screen initialize successfully!");
 		return ERROR_NONE;
@@ -83,12 +83,13 @@ ERROR_CODE Screen_init(HardwareSerial& _stream, const uint32_t _baudRate_u32, co
  * 
  * @return 	ERROR_NONE on success.
  */
-extern ERROR_CODE Screen_getDataFromTextBox(const char *objectName, float *calibValue)
+ERROR_CODE Screen_getDataFromTextBox(const char *objectName, float *calibValue)
 {
-	float calibValueTemp_u32 = textFromDisplay2Float(myNex.readStr(objectName));
-	if (calibValueTemp_u32 != ERROR_READ_DISPLAY)
+	String objectNameString = String(objectName);
+	float calibValueTemp = textFromDisplay2Float(myNex.readStr(objectNameString));
+	if (calibValueTemp != ERROR_READ_DISPLAY)
 	{
-		*calibValue = calibValueTemp_u32;
+		*calibValue = calibValueTemp;
 		log_e("Read calibration data form address \"%s\" successfully!", objectName);
 		return ERROR_NONE;
 	} else {
