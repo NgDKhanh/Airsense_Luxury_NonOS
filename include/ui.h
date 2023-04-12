@@ -14,6 +14,7 @@
 #include "string.h"
 #include "configs.h"
 #include "EasyNextionLibrary.h"
+#include "cmath"
 #include <EEPROM.h>
 
 
@@ -42,8 +43,8 @@ float textFromDisplay2Float(String textFromDisplay){
     if(textFromDisplay == "ERROR") {
         return ERROR_READ_DISPLAY;
     }
-    uint32_t power = textFromDisplay.substring(0, 1).toInt();
-    uint32_t value = textFromDisplay.substring(1).toInt();
+    int power = textFromDisplay.substring(0, 1).toInt();
+    int value = textFromDisplay.substring(1).toInt();
     return (float)(value / pow(10, power));
 }
 
@@ -57,7 +58,7 @@ float textFromDisplay2Float(String textFromDisplay){
  * 
  * @return ERROR_NONE on success
  */
-ERROR_CODE Screen_init(HardwareSerial &_stream, const uint32_t _baudRate_u32 = 9600U, const uint32_t _romSize_u32 = 512U)
+ERROR_CODE Screen_init(HardwareSerial& _stream, const uint32_t _baudRate_u32, const uint32_t _romSize_u32)
 {
 	myNex.begin(_baudRate_u32);		// khoi dong man hinh Nextion 
 
@@ -83,18 +84,18 @@ ERROR_CODE Screen_init(HardwareSerial &_stream, const uint32_t _baudRate_u32 = 9
  * 
  * @return 	ERROR_NONE on success.
  */
-ERROR_CODE Screen_getDataFromTextBox(const char *objectName, float *calibValue)
+extern ERROR_CODE Screen_getDataFromTextBox(const char *objectName, float *calibValue)
 {
 	String objectNameString = String(objectName);
-	float calibValueTemp = textFromDisplay2Float(myNex.readStr(objectNameString));
-	if (calibValueTemp != ERROR_READ_DISPLAY)
+	float calibValueTemp_u32 = textFromDisplay2Float(myNex.readStr(objectName));
+	if (calibValueTemp_u32 != ERROR_READ_DISPLAY)
 	{
-		*calibValue = calibValueTemp;
+		*calibValue = calibValueTemp_u32;
 		log_e("Read calibration data form address \"%s\" successfully!", objectName);
-		return ERROR_NONE;
+		return /*ERROR_NONE*/true;
 	} else {
 		log_e("Read calibration data form address \"%s\" failed!", objectName);
-		return ERROR_SCREEN_GET_CALIB_DATA_FAILED;
+		return /*ERROR_SCREEN_GET_CALIB_DATA_FAILED*/false;
 	}
 }
 
@@ -106,7 +107,7 @@ ERROR_CODE Screen_getDataFromTextBox(const char *objectName, float *calibValue)
  * 
  * @return  ERRROR_NONE on success
  */
-ERROR_CODE Screen_getCalibDataFromUser(struct calibData *_calibData)
+extern ERROR_CODE Screen_getCalibDataFromUser(struct calibData *_calibData)
 {
 	if (Screen_getDataFromTextBox("calib.a_temp.txt", &(_calibData->temperature_calibA  )) &&
 		Screen_getDataFromTextBox("calib.a_humi.txt", &(_calibData->humidity_calibA     )) &&
@@ -179,7 +180,7 @@ extern ERROR_CODE checkDataValid(struct calibData *_calibData)
  */
 ERROR_CODE Screen_displayCalibData(struct calibData *_calibData)
 {
-	if (SCREEN_SERIAL_PORT.available())
+	if (/*SCREEN_SERIAL_PORT.available()*/ true)
 	{
 		myNex.writeNum("dl.n4.val", _calibData->temperature_calibA   );		// Write calibration data to address on Nextion screen
 		myNex.writeNum("dl.n5.val", _calibData->humidity_calibA      );		// Write calibration data to address on Nextion screen
@@ -205,7 +206,7 @@ ERROR_CODE Screen_displayCalibData(struct calibData *_calibData)
  */
 ERROR_CODE Screen_updateStatus(struct connectionStatus *_connectionStatus_st)
 {
-	if (SCREEN_SERIAL_PORT.available())
+	if (/*SCREEN_SERIAL_PORT.available()*/ true)
 	{
 		myNex.writeNum("dl.wifi.val", _connectionStatus_st->wifiStatus);			// cap nhat trang thai wifi
 		myNex.writeNum("dl.sd.val", _connectionStatus_st->sdCardStatus);			// cap nhat trang thai the SD
@@ -244,7 +245,7 @@ ERROR_CODE Screen_updateCurrentDateTime(DateTime time)
 
 ERROR_CODE Screen_updateCurrentDateTime(const char *currentTimeString)
 {
-	if (SCREEN_SERIAL_PORT.available())
+	if (/*SCREEN_SERIAL_PORT.available()*/ true)
 	{
 		myNex.writeStr("dl.time.txt", String(currentTimeString));		// in thoi gian ra man hinh neu thoi gian hop le
 		log_e("Update datetime successfully!");
@@ -264,9 +265,9 @@ ERROR_CODE Screen_updateCurrentDateTime(const char *currentTimeString)
  */
 ERROR_CODE Screen_displaysensorData(struct sensorData *_sensorData_st, struct calibData *_calibData)
 {
-	if (SCREEN_SERIAL_PORT.available())
+	if (/*SCREEN_SERIAL_PORT.available()*/ true)
 	{
-		myNex.writeStr("dl.temc.txt"   , String(_sensorData_st->temperature * _calibData->temperature_calibA + _calibData->humidity_calibB, 1U));
+		myNex.writeStr("dl.temc.txt"   , String(_sensorData_st->temperature * _calibData->temperature_calibA + _calibData->temperature_calibB, 1U));
 		myNex.writeStr("dl.hum.txt"    , String(_sensorData_st->humidity * _calibData->humidity_calibA + _calibData->humidity_calibB, 1U));
 
 		myNex.writeNum("dl.nppb.val"   , _sensorData_st->o3_ppb);					// ghi gia tri O3 thoe don vi ppm ra man hinh 
