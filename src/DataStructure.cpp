@@ -1,8 +1,8 @@
 #include "DataStructure.h"
 
-ERROR_CODE creatCalibDataString(char *_calibDataString, struct calibData _calibData)
+ERROR_CODE createCalibDataString(char *_calibDataString, struct calibData _calibData)
 {
-	sprintf(_calibDataString, "%f|%f|%f|%f|%f|%f|%f\n",
+	sprintf(_calibDataString, "%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f\n",
 							  _calibData.temperature_calibA,
 							  _calibData.humidity_calibA,
 							  _calibData.pm1_calibA,

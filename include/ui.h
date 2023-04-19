@@ -26,6 +26,8 @@
 #define ERROR_SCREEN_UPDATE_DATETIME_FAILED		  0x46
 #define ERROR_SCREEN_DISPLAY_SENSORDATA_FAILED 	  0x47
 
+#define CALIB_UNCHANGED							  0x48
+
 
 EasyNex myNex(SCREEN_SERIAL_PORT);			// khai bao doi tuong man hinh Nextion ket noi Serial (Serial)
 
@@ -92,10 +94,10 @@ extern ERROR_CODE Screen_getDataFromTextBox(const char *objectName, float *calib
 	{
 		*calibValue = calibValueTemp_u32;
 		log_e("Read calibration data form address \"%s\" successfully!", objectName);
-		return /*ERROR_NONE*/true;
+		return ERROR_NONE;
 	} else {
 		log_e("Read calibration data form address \"%s\" failed!", objectName);
-		return /*ERROR_SCREEN_GET_CALIB_DATA_FAILED*/false;
+		return ERROR_SCREEN_GET_CALIB_DATA_FAILED;
 	}
 }
 
@@ -109,18 +111,18 @@ extern ERROR_CODE Screen_getDataFromTextBox(const char *objectName, float *calib
  */
 extern ERROR_CODE Screen_getCalibDataFromUser(struct calibData *_calibData)
 {
-	if (Screen_getDataFromTextBox("calib.a_temp.txt", &(_calibData->temperature_calibA  )) &&
-		Screen_getDataFromTextBox("calib.a_humi.txt", &(_calibData->humidity_calibA     )) &&
-		Screen_getDataFromTextBox("calib.a_pm1.txt",  &(_calibData->pm1_calibA          )) &&
-		Screen_getDataFromTextBox("calib.a_pm10.txt", &(_calibData->pm10_calibA         )) &&
-		Screen_getDataFromTextBox("calib.a_pm25.txt", &(_calibData->pm25_calibA         )) &&
-		Screen_getDataFromTextBox("calib.a_o3.txt",   &(_calibData->o3_calibA         	)) &&
-		Screen_getDataFromTextBox("calib.b_temp.txt", &(_calibData->temperature_calibB	)) &&
-		Screen_getDataFromTextBox("calib.b_humi.txt", &(_calibData->humidity_calibB   	)) &&
-		Screen_getDataFromTextBox("calib.b_pm1.txt",  &(_calibData->pm1_calibB			)) &&
-		Screen_getDataFromTextBox("calib.b_pm10.txt", &(_calibData->pm10_calibB			)) &&
-		Screen_getDataFromTextBox("calib.b_pm25.txt", &(_calibData->pm25_calibB			)) &&
-		Screen_getDataFromTextBox("calib.b_o3.txt",   &(_calibData->o3_calibB       	)))
+	if (Screen_getDataFromTextBox("calib.a_temp.txt", &(_calibData->temperature_calibA  ))  == ERROR_NONE &&
+		Screen_getDataFromTextBox("calib.a_humi.txt", &(_calibData->humidity_calibA     ))  == ERROR_NONE &&
+		Screen_getDataFromTextBox("calib.a_pm1.txt",  &(_calibData->pm1_calibA          ))  == ERROR_NONE &&
+		Screen_getDataFromTextBox("calib.a_pm10.txt", &(_calibData->pm10_calibA         ))  == ERROR_NONE &&
+		Screen_getDataFromTextBox("calib.a_pm25.txt", &(_calibData->pm25_calibA         ))  == ERROR_NONE &&
+		Screen_getDataFromTextBox("calib.a_o3.txt",   &(_calibData->o3_calibA         	))  == ERROR_NONE &&
+		Screen_getDataFromTextBox("calib.b_temp.txt", &(_calibData->temperature_calibB	))  == ERROR_NONE &&
+		Screen_getDataFromTextBox("calib.b_humi.txt", &(_calibData->humidity_calibB   	))  == ERROR_NONE &&
+		Screen_getDataFromTextBox("calib.b_pm1.txt",  &(_calibData->pm1_calibB			))  == ERROR_NONE &&
+		Screen_getDataFromTextBox("calib.b_pm10.txt", &(_calibData->pm10_calibB			))  == ERROR_NONE &&
+		Screen_getDataFromTextBox("calib.b_pm25.txt", &(_calibData->pm25_calibB			))  == ERROR_NONE &&
+		Screen_getDataFromTextBox("calib.b_o3.txt",   &(_calibData->o3_calibB       	))  == ERROR_NONE)
 	{
 		log_e(" %f|", _calibData->temperature_calibA   );		// print calibration data to Serial port
 		log_e(" %f|", _calibData->humidity_calibA      );		// print calibration data to Serial port
@@ -141,6 +143,32 @@ extern ERROR_CODE Screen_getCalibDataFromUser(struct calibData *_calibData)
 		log_e("Read all calibration data failed!");
 		return ERROR_SCREEN_GET_CALIB_DATA_FAILED;
 	}
+}
+
+/**
+ * @brief Check if calibration data changed by user or not
+ * 
+ * @param[in] _calibData: pointer to calibration data struct
+ * 
+ * @return ERROR_NONE: Calibration data changed successful
+ *       | ERROR_SCREEN_GET_CALIB_DATA_FAILED: Calibration data changed failed
+ * 		 | CALIB_UNCHANGED: Calibration data not changed 
+ */
+ERROR_CODE Screen_checkCalibChanged(struct calibData *_calibData)
+{
+	uint32_t calibChanged = myNex.readNumber("dl.calib_change.val");
+	if (calibChanged != 0 && calibChanged != ERROR_READ_DISPLAY)
+	{
+		log_e("Calibration changed!");
+		Screen_getCalibDataFromUser(_calibData);
+		myNex.writeNum("dl.calib_change.val", 0);
+	}
+	else 
+	{
+		log_e("Calibration not changed!");
+		return CALIB_UNCHANGED;
+	}
+	 	
 }
 
 
@@ -242,7 +270,12 @@ ERROR_CODE Screen_updateCurrentDateTime(DateTime time)
 }
 #endif
 
-
+/**
+ * @brief Update current datetime 
+ * 
+ * @param[in] currentTimeString string that contains current time
+ * @return ERROR_CODE 
+ */
 ERROR_CODE Screen_updateCurrentDateTime(const char *currentTimeString)
 {
 	if (/*SCREEN_SERIAL_PORT.available()*/ true)
@@ -261,6 +294,8 @@ ERROR_CODE Screen_updateCurrentDateTime(const char *currentTimeString)
  * @brief Display data to screen
  * 
  * @param _sensorData_st pointer to struct sensorData
+ * @param[in] _calibData: pointer to calibration data struct
+ * 
  * @return ERROR_CODE 
  */
 ERROR_CODE Screen_displaysensorData(struct sensorData *_sensorData_st, struct calibData *_calibData)
@@ -271,10 +306,10 @@ ERROR_CODE Screen_displaysensorData(struct sensorData *_sensorData_st, struct ca
 		myNex.writeStr("dl.hum.txt"    , String(_sensorData_st->humidity * _calibData->humidity_calibA + _calibData->humidity_calibB, 1U));
 
 		myNex.writeNum("dl.nppb.val"   , _sensorData_st->o3_ppb);					// ghi gia tri O3 thoe don vi ppm ra man hinh 
-		myNex.writeStr("dl.sppb.txt"   , String(_sensorData_st->o3_ppb, 10));		// ghi 
+		myNex.writeStr("dl.sppb.txt"   , String(float(_sensorData_st->o3_ppb * _calibData->o3_calibA + _calibData->o3_calibB), 1U));		// ghi 
 
-		myNex.writeStr("dl.sug.txt"    , String(_sensorData_st->o3_ug, 1U));
-		myNex.writeStr("dl.sppm.txt"   , String((_sensorData_st->o3_ppb/1000.0), 3U));
+		myNex.writeStr("dl.sug.txt"    , String((float(_sensorData_st->o3_ppb * _calibData->o3_calibA + _calibData->o3_calibB)*1.98), 1U));
+		myNex.writeStr("dl.sppm.txt"   , String((float(_sensorData_st->o3_ppb * _calibData->o3_calibA + _calibData->o3_calibB)/1000.0), 3U));
 		myNex.writeStr("dl.sminppb.txt", String(_sensorData_st->o3_ppb_min, 10));
 		myNex.writeStr("dl.sminug.txt" , String(_sensorData_st->o3_ug_min, 1U));
 		myNex.writeStr("dl.sminppm.txt", String((_sensorData_st->o3_ppb_min/1000.0), 3U));

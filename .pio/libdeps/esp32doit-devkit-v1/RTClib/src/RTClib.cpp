@@ -702,6 +702,10 @@ String DateTime::timestamp(timestampOpt opt) const {
     // Only date
     sprintf(buffer, "%u-%02d-%02d", 2000U + yOff, m, d);
     break;
+  case TIMESTAMP_AIRSENSE:
+    // Airsense time
+    sprintf(buffer, "%02d:%02d  %02d-%02d-%u", hh, mm, d, m, 2000U + yOff);
+    break;
   default:
     // Full
     sprintf(buffer, "%u-%02d-%02dT%02d:%02d:%02d", 2000U + yOff, m, d, hh, mm,

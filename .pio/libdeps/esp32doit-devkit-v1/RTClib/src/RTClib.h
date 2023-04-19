@@ -203,9 +203,10 @@ public:
       option corresponds to a `toString()` format as follows:
   */
   enum timestampOpt {
-    TIMESTAMP_FULL, //!< `YYYY-MM-DDThh:mm:ss`
-    TIMESTAMP_TIME, //!< `hh:mm:ss`
-    TIMESTAMP_DATE  //!< `YYYY-MM-DD`
+    TIMESTAMP_FULL,       //!< `YYYY-MM-DDThh:mm:ss`
+    TIMESTAMP_TIME,       //!< `hh:mm:ss`
+    TIMESTAMP_DATE,       //!< `YYYY-MM-DD`
+    TIMESTAMP_AIRSENSE    //!< `hh:mm DD-MM-YYYY`
   };
   String timestamp(timestampOpt opt = TIMESTAMP_FULL) const;
 

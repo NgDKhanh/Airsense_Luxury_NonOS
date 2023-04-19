@@ -26,14 +26,14 @@ extern const char *NAME, *prompt;
 extern struct sensorData sensorData_st;
 
 extern char dateTime_string[25];
-extern char dataCalib_string[50];
+extern char dataCalib_string[80];
 extern char sensorDataString[64];
 extern String messageData;
 
 extern const char* remote_host_string;
 
-extern const char fileNameCalib[];
-extern char nameFileSaveData[12];
+// extern const char fileNameCalib[];
+// extern char nameFileSaveData[20];
 
 extern char topic[32];
 extern char espID[10];
@@ -56,7 +56,7 @@ extern PubSubClient mqttClient;
 extern NTPClient timeClient;
 
 extern const char fileNameCalib[];			// file chua cac gia tri calib
-extern char nameFileSaveData[12];							// ten file luu du lieu cua sensor theo tung ngay
+extern char nameFileSaveData[20];							// ten file luu du lieu cua sensor theo tung ngay
 
 extern const char* remote_host_string;
 extern RTC_DS3231 realTime;

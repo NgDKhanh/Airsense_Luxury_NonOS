@@ -63,7 +63,7 @@ struct calibData {
  * @param[in]  _calibData: struct calibdata
  * @return ERROR_CODE 
  */
-ERROR_CODE creatCalibDataString(char *_calibDataString, struct calibData _calibData);
+ERROR_CODE createCalibDataString(char *_calibDataString, struct calibData _calibData);
 
 struct sensorData {
     float      temperature;
@@ -77,7 +77,7 @@ struct sensorData {
     uint32_t   co_2_u32;
     uint32_t   co_2_max_u32;
     uint32_t   co_2_min_u32;
-    uint32_t      o3_ppb;
+    uint32_t   o3_ppb;
     float      o3_ppm;
     float      o3_ug;
     float      o3_ppb_min;
@@ -133,9 +133,9 @@ struct sensorData {
         this->temperature	 = _sensorData_temp.temperature;
         this->humidity		 = _sensorData_temp.humidity;
         this->pressure_u32	 = _sensorData_temp.pressure_u32;
-        this->pm1        = _sensorData_temp.pm1;
-        this->pm25       = _sensorData_temp.pm25;
-        this->pm10       = _sensorData_temp.pm10;
+        this->pm1            = _sensorData_temp.pm1;
+        this->pm25           = _sensorData_temp.pm25;
+        this->pm10           = _sensorData_temp.pm10;
         this->pm25_min_u32   = _sensorData_temp.pm25_min_u32;
         this->pm25_max_u32   = _sensorData_temp.pm25_max_u32;
         this->pressure_u32	 = _sensorData_temp.pressure_u32;

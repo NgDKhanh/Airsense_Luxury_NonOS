@@ -29,18 +29,18 @@ DFRobot_OzoneSensor Ozone;
  *  
  * @return ERROR_CODE 
  * @retval ERROR_NONE: if success
- * @retval ERROR_PMS_INIT_FAILED: if failed
+ * @retval ERROR_OZONE_INIT_FAILED: if failed
  */
 ERROR_CODE dfozone_init();
 
 /**
  * @brief Get new data from OZONE SENSOR
  * 
- * @param[out] _co_2: PM CO2
+ * @param[out] _o_3: ozone
  * 
  * @return ERROR_CODE 
  * @retval ERROR_NONE: if success
- * @retval ERROR_PMS_GET_DATA_FAILED: if failed
+ * @retval ERROR_OZONE_GET_DATA_FAILED: if failed
  */
 ERROR_CODE dfozone_getdata(uint32_t &_o_3);
 

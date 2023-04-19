@@ -44,14 +44,15 @@ struct connectionStatus
 //========================== DEFINE FOR WIFI ========================
 
 // #define USING_WIFI_CONFIG
-const char ssid[] = "BK Star";
-const char pass[]  = "bkstar2021";
+const char ssid[] = "Xom An";
+const char pass[]  = "0982332457";
 
 //========================== DEFINE FOR LOGGING ========================
 
 #define USING_SDCARD
 #define USING_MQTT
 #define USING_RTC
+#define USING_NEXTION
 
 //========================== DEFINE CHO MAN HINH ========================
 

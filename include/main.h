@@ -37,7 +37,7 @@ const char *NAME = "AirSENSE";
 const char *prompt = "AirSENSE> ";
 
 char dateTime_string[25];
-char dataCalib_string[50];
+char dataCalib_string[80];
 char sensorDataString[64];
 String messageData;
 
@@ -55,7 +55,7 @@ PubSubClient mqttClient(espClient);
 NTPClient timeClient(ntpUDP, "de.pool.ntp.org", 3600*7, 60000);
 
 const char fileNameCalib[] = "calib.txt";			// file chua cac gia tri calib
-char nameFileSaveData[12];							// ten file luu du lieu cua sensor theo tung ngay
+char nameFileSaveData[20];							// ten file luu du lieu cua sensor theo tung ngay
 
 const char* remote_host_string = "www.google.com";
 
