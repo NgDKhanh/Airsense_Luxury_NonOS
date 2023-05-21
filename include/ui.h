@@ -93,10 +93,10 @@ extern ERROR_CODE Screen_getDataFromTextBox(const char *objectName, float *calib
 	if (calibValueTemp_u32 != ERROR_READ_DISPLAY)
 	{
 		*calibValue = calibValueTemp_u32;
-		log_e("Read calibration data form address \"%s\" successfully!", objectName);
+		log_e("Read calibration data from address \"%s\" successfully!", objectName);
 		return ERROR_NONE;
 	} else {
-		log_e("Read calibration data form address \"%s\" failed!", objectName);
+		log_e("Read calibration data fromm address \"%s\" failed!", objectName);
 		return ERROR_SCREEN_GET_CALIB_DATA_FAILED;
 	}
 }
@@ -303,6 +303,7 @@ ERROR_CODE Screen_displaysensorData(struct sensorData *_sensorData_st, struct ca
 	if (/*SCREEN_SERIAL_PORT.available()*/ true)
 	{
 		myNex.writeStr("dl.temc.txt"   , String(_sensorData_st->temperature * _calibData->temperature_calibA + _calibData->temperature_calibB, 1U));
+		myNex.writeStr("dl.temf.txt"   , String((_sensorData_st->temperature * _calibData->temperature_calibA + _calibData->temperature_calibB)*1.8 + 32, 1U));		
 		myNex.writeStr("dl.hum.txt"    , String(_sensorData_st->humidity * _calibData->humidity_calibA + _calibData->humidity_calibB, 1U));
 
 		myNex.writeNum("dl.nppb.val"   , _sensorData_st->o3_ppb);					// ghi gia tri O3 thoe don vi ppm ra man hinh 

@@ -75,7 +75,7 @@ ERROR_CODE createMessageMQTTString( String &messageMQTTString,
     // doc["PM2p5"] = _sensorData_st.pm25;
     // doc["PM10"] = _sensorData_st.pm10;
     // doc["CO2_PPM"] = _sensorData_st.co_2_u32;
-    // doc["CO3_PPB"] = _sensorData_st.o3_ppb;
+    doc["CO3_PPB"] = _sensorData_st.o3_ppb;
 
     String output;
     serializeJson(doc, output);
