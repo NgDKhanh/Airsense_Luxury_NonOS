@@ -113,29 +113,34 @@ extern ERROR_CODE Screen_getCalibDataFromUser(struct calibData *_calibData)
 {
 	if (Screen_getDataFromTextBox("calib.a_temp.txt", &(_calibData->temperature_calibA  ))  == ERROR_NONE &&
 		Screen_getDataFromTextBox("calib.a_humi.txt", &(_calibData->humidity_calibA     ))  == ERROR_NONE &&
+		Screen_getDataFromTextBox("calib.a_press.txt",&(_calibData->pressure_calibA     ))  == ERROR_NONE &&
 		Screen_getDataFromTextBox("calib.a_pm1.txt",  &(_calibData->pm1_calibA          ))  == ERROR_NONE &&
 		Screen_getDataFromTextBox("calib.a_pm10.txt", &(_calibData->pm10_calibA         ))  == ERROR_NONE &&
 		Screen_getDataFromTextBox("calib.a_pm25.txt", &(_calibData->pm25_calibA         ))  == ERROR_NONE &&
 		Screen_getDataFromTextBox("calib.a_o3.txt",   &(_calibData->o3_calibA         	))  == ERROR_NONE &&
 		Screen_getDataFromTextBox("calib.b_temp.txt", &(_calibData->temperature_calibB	))  == ERROR_NONE &&
 		Screen_getDataFromTextBox("calib.b_humi.txt", &(_calibData->humidity_calibB   	))  == ERROR_NONE &&
+		Screen_getDataFromTextBox("calib.a_press.txt",&(_calibData->pressure_calibB     ))  == ERROR_NONE &&
 		Screen_getDataFromTextBox("calib.b_pm1.txt",  &(_calibData->pm1_calibB			))  == ERROR_NONE &&
 		Screen_getDataFromTextBox("calib.b_pm10.txt", &(_calibData->pm10_calibB			))  == ERROR_NONE &&
 		Screen_getDataFromTextBox("calib.b_pm25.txt", &(_calibData->pm25_calibB			))  == ERROR_NONE &&
 		Screen_getDataFromTextBox("calib.b_o3.txt",   &(_calibData->o3_calibB       	))  == ERROR_NONE)
 	{
-		log_e(" %f|", _calibData->temperature_calibA   );		// print calibration data to Serial port
-		log_e(" %f|", _calibData->humidity_calibA      );		// print calibration data to Serial port
-		log_e(" %f|", _calibData->pm1_calibA           );		// print calibration data to Serial port
-		log_e(" %f|", _calibData->pm10_calibA          );		// print calibration data to Serial port
-		log_e(" %f|", _calibData->pm25_calibA          );		// print calibration data to Serial port
-		log_e(" %f|", _calibData->o3_calibA            );		// print calibration data to Serial port
-		log_e(" %f|", _calibData->temperature_calibB   );		// print calibration data to Serial port
-		log_e(" %f|", _calibData->humidity_calibB      );		// print calibration data to Serial port
-		log_e(" %f|", _calibData->pm1_calibB           );		// print calibration data to Serial port
-		log_e(" %f|", _calibData->pm10_calibB   	   );		// print calibration data to Serial port
-		log_e(" %f|", _calibData->pm25_calibB          );		// print calibration data to Serial port
-		log_e(" %f|", _calibData->o3_calibB            );		// print calibration data to Serial port
+		// print calibration data to Serial port
+		log_e(" %f|", _calibData->temperature_calibA   );		
+		log_e(" %f|", _calibData->humidity_calibA      );	
+		log_e(" %f|", _calibData->pressure_calibA      );	
+		log_e(" %f|", _calibData->pm1_calibA           );		
+		log_e(" %f|", _calibData->pm10_calibA          );		
+		log_e(" %f|", _calibData->pm25_calibA          );		
+		log_e(" %f|", _calibData->o3_calibA            );		
+		log_e(" %f|", _calibData->temperature_calibB   );		
+		log_e(" %f|", _calibData->humidity_calibB      );	
+		log_e(" %f|", _calibData->pressure_calibB      );		
+		log_e(" %f|", _calibData->pm1_calibB           );		
+		log_e(" %f|", _calibData->pm10_calibB   	   );		
+		log_e(" %f|", _calibData->pm25_calibB          );		
+		log_e(" %f|", _calibData->o3_calibB            );		
 		log_e("--------------------------");
 		log_e("Read all calibration data successfully!");
 		return ERROR_NONE;
@@ -184,6 +189,7 @@ extern ERROR_CODE checkDataValid(struct calibData *_calibData)
 {
 	if ((_calibData->temperature_calibA   < 1000) ||
  		(_calibData->humidity_calibA 	  < 1000) ||
+		(_calibData->pressure_calibA 	  < 1000) ||
  		(_calibData->pm1_calibA 		  < 1000) ||
  		(_calibData->pm10_calibA 		  < 1000) ||
  		(_calibData->pm25_calibA 		  < 1000) ||
@@ -303,11 +309,14 @@ ERROR_CODE Screen_displaysensorData(struct sensorData *_sensorData_st, struct ca
 	if (/*SCREEN_SERIAL_PORT.available()*/ true)
 	{
 		myNex.writeStr("dl.temc.txt"   , String(_sensorData_st->temperature * _calibData->temperature_calibA + _calibData->temperature_calibB, 1U));
-		myNex.writeStr("dl.temf.txt"   , String((_sensorData_st->temperature * _calibData->temperature_calibA + _calibData->temperature_calibB)*1.8 + 32, 1U));		
+		myNex.writeStr("dl.temf.txt"   , String((_sensorData_st->temperature * 1.8 + 32) * _calibData->temperature_calibA + _calibData->temperature_calibB, 1U));		
 		myNex.writeStr("dl.hum.txt"    , String(_sensorData_st->humidity * _calibData->humidity_calibA + _calibData->humidity_calibB, 1U));
 
+		myNex.writeStr("dl.press_pa.txt",  String(_sensorData_st->pressure_u32 * _calibData->pressure_calibA + _calibData->pressure_calibB, 1U));
+		myNex.writeStr("dl.press_atm.txt", String(_sensorData_st->pressure_u32 * _calibData->pressure_calibA * 0.000987 + _calibData->pressure_calibB, 3U));
+
 		myNex.writeNum("dl.nppb.val"   , _sensorData_st->o3_ppb);					// ghi gia tri O3 thoe don vi ppm ra man hinh 
-		myNex.writeStr("dl.sppb.txt"   , String(float(_sensorData_st->o3_ppb * _calibData->o3_calibA + _calibData->o3_calibB), 1U));		// ghi 
+		myNex.writeStr("dl.sppb.txt"   , String(float(_sensorData_st->o3_ppb * _calibData->o3_calibA + _calibData->o3_calibB), 1U));	
 
 		myNex.writeStr("dl.sug.txt"    , String((float(_sensorData_st->o3_ppb * _calibData->o3_calibA + _calibData->o3_calibB)*1.98), 1U));
 		myNex.writeStr("dl.sppm.txt"   , String((float(_sensorData_st->o3_ppb * _calibData->o3_calibA + _calibData->o3_calibB)/1000.0), 3U));

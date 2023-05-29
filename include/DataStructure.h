@@ -27,12 +27,14 @@
 struct calibData {
     float temperature_calibA;
     float humidity_calibA;
+    float pressure_calibA;
     float pm1_calibA;
     float pm10_calibA;
     float pm25_calibA;
     float o3_calibA;
     float temperature_calibB;
     float humidity_calibB;
+    float pressure_calibB;
     float pm1_calibB;
     float pm10_calibB;
     float pm25_calibB;
@@ -41,12 +43,14 @@ struct calibData {
     calibData() {     // initialation function for struct (C++ style)
         this->temperature_calibA      = 1;
         this->humidity_calibA         = 1;
+        this->pressure_calibA         = 1;
         this->pm1_calibA              = 1;
         this->pm10_calibA             = 1;
         this->pm25_calibA             = 1;
         this->o3_calibA               = 1;
         this->temperature_calibB      = 0;
         this->humidity_calibB         = 0;
+        this->pressure_calibB         = 0;
         this->pm1_calibB              = 0;
         this->pm10_calibB             = 0;  
         this->pm25_calibB             = 0;
@@ -89,8 +93,8 @@ struct sensorData {
 
     sensorData() 
     {
-        this->temperature	  = 0;
-        this->humidity		  = 0;
+        this->temperature	  = 10;
+        this->humidity		  = 50;
         this->pressure_u32    = 0;
         this->pm1             = 0;
         this->pm25            = 0;

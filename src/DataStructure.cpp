@@ -2,15 +2,17 @@
 
 ERROR_CODE createCalibDataString(char *_calibDataString, struct calibData _calibData)
 {
-	sprintf(_calibDataString, "%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f\n",
+	sprintf(_calibDataString, "%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f\n",
 							  _calibData.temperature_calibA,
 							  _calibData.humidity_calibA,
+                              _calibData.pressure_calibA,
 							  _calibData.pm1_calibA,
 							  _calibData.pm10_calibA,
 							  _calibData.pm25_calibA,
                               _calibData.o3_calibA,
 							  _calibData.temperature_calibB,
 							  _calibData.humidity_calibB,
+                              _calibData.humidity_calibB,
                               _calibData.pm10_calibB,
                               _calibData.pm1_calibB,
                               _calibData.pm25_calibB,
@@ -70,7 +72,7 @@ ERROR_CODE createMessageMQTTString( String &messageMQTTString,
     
     doc["Temperature"] = _sensorData_st.temperature;
     doc["Humidity"] = _sensorData_st.humidity;
-    // doc["Pressure"] = _sensorData_st.pressure_u32;
+    doc["Pressure"] = _sensorData_st.pressure_u32;
     // doc["PM1"]  = _sensorData_st.pm1;
     // doc["PM2p5"] = _sensorData_st.pm25;
     // doc["PM10"] = _sensorData_st.pm10;

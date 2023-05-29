@@ -50,9 +50,13 @@ const char pass[]  = "0982332457";
 //========================== DEFINE FOR LOGGING ========================
 
 #define USING_SDCARD
-#define USING_MQTT
+// #define USING_MQTT
 #define USING_RTC
 #define USING_NEXTION
+
+#define USING_SHT85
+#define USING_DFOZONE
+#define USING_BME280
 
 //========================== DEFINE CHO MAN HINH ========================
 

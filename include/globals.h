@@ -26,8 +26,8 @@ extern const char *NAME, *prompt;
 extern struct sensorData sensorData_st;
 
 extern char dateTime_string[25];
-extern char dataCalib_string[80];
-extern char sensorDataString[64];
+extern char dataCalib_string[100];
+extern char sensorDataString[100];
 extern String messageData;
 
 extern const char* remote_host_string;

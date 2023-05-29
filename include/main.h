@@ -20,7 +20,7 @@
 #include "WiFiDriver.h"
 #include "DFOzoneSensor.h"
 #include "SHTSensor.h"
-// #include "BMESensor.h"
+#include "BMESensor.h"
 // #include "PMS7003Sensor.h"
 // #include "MHZ19BSensor.h"
 #include "DS3231Driver.h"
@@ -37,8 +37,8 @@ const char *NAME = "AirSENSE";
 const char *prompt = "AirSENSE> ";
 
 char dateTime_string[25];
-char dataCalib_string[80];
-char sensorDataString[64];
+char dataCalib_string[100];
+char sensorDataString[100];
 String messageData;
 
 struct sensorData sensorData_st;

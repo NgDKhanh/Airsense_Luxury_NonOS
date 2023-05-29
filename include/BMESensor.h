@@ -33,6 +33,15 @@ BME280I2C bmeSensor;
  */
 ERROR_CODE bme_initialize(TwoWire &_wire);
 
+/**
+ * @brief Initialize BME280 Sensor
+ * 
+ * @return ERROR_CODE 
+ * @retval ERROR_NONE: if success
+ * @retval ERROR_BME_INIT_FAILED: if failed
+ */
+ERROR_CODE bme_initialize();
+
 
 /**
  * @brief Get temperature, humidity and presure value from BME280 Sensor 
@@ -46,6 +55,18 @@ ERROR_CODE bme_initialize(TwoWire &_wire);
  * @retval ERROR_BME_DET_DATA_FAILED: if failed
  */
 ERROR_CODE bme_readData(float &_temperature, float &_humidity, float &_pressure);
+
+/**
+ * @brief Get presure value from BME280 Sensor 
+ *
+ * @param[out] _pressure: pressure value (hPa)
+ * 
+ * @return ERROR_CODE
+ * @retval ERROR_NONE: if success
+ * @retval ERROR_BME_DET_DATA_FAILED: if failed
+ */
+ERROR_CODE bme_readPressure(float &_pressure);
+
 
 ERROR_CODE bme_initialize(TwoWire &_wire)
 {
@@ -64,6 +85,21 @@ ERROR_CODE bme_initialize(TwoWire &_wire)
 
 };
 
+ERROR_CODE bme_initialize()
+{
+
+    if (bmeSensor.begin())
+    {
+        log_e("BME280 Sensor initialize successfully!");
+        // connectionStatus_st.bmeSensor = status_et::CONNECTED;
+        return ERROR_NONE;
+    } else {
+        log_e("BME280 Sensor initialize failed!");
+        // connectionStatus_st.bmeSensor = status_et::DISCONNECTED;
+        return ERROR_BME_INIT_FAILED;
+    }
+
+};
 
 ERROR_CODE bme_readData(float &_temperature, float &_humidity, float &_pressure)
 {
@@ -77,6 +113,20 @@ ERROR_CODE bme_readData(float &_temperature, float &_humidity, float &_pressure)
         return ERROR_BME_DET_DATA_FAILED;
     } else {
         log_i("BME280 Sensor get data successsfully!");
+        return ERROR_NONE;
+    }
+};
+
+ERROR_CODE bme_readPressure(float &_pressure)
+{
+    log_e("read pressure!");
+    _pressure = bmeSensor.pres();
+    if (_pressure == NAN)
+    {
+        log_e("BME280 Sensor get data failed!");
+        return ERROR_BME_DET_DATA_FAILED;
+    } else {
+        log_e("BME280 Sensor get data successsfully!");
         return ERROR_NONE;
     }
 };
