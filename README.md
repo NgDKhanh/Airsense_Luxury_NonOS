@@ -1,3 +1,3 @@
-# AirSENSE-ESP32-RTOS
+# AirSENSE-ESP32-NONOS
 
-we are using freeRTOS because NonOS is very stupid
+Non-OS version of AirSENSE Luxury
