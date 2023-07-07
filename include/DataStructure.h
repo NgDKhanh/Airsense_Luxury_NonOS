@@ -65,9 +65,10 @@ struct calibData {
  * 
  * @param[out] _calibDataString: pointer char*, use to store string
  * @param[in]  _calibData: struct calibdata
+ * @param[in]  _dateTimeString: time the calib is changed
  * @return ERROR_CODE 
  */
-ERROR_CODE createCalibDataString(char *_calibDataString, struct calibData _calibData);
+ERROR_CODE createCalibDataString(char *_calibDataString, struct calibData _calibData, const char *_dateTimeString);
 
 struct sensorData {
     float      temperature;
@@ -142,7 +143,6 @@ struct sensorData {
         this->pm10           = _sensorData_temp.pm10;
         this->pm25_min_u32   = _sensorData_temp.pm25_min_u32;
         this->pm25_max_u32   = _sensorData_temp.pm25_max_u32;
-        this->pressure_u32	 = _sensorData_temp.pressure_u32;
         this->co_2_u32       = _sensorData_temp.co_2_u32;
         this->co_2_max_u32   = _sensorData_temp.co_2_max_u32;
         this->co_2_min_u32	 = _sensorData_temp.co_2_min_u32;

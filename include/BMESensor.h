@@ -126,7 +126,7 @@ ERROR_CODE bme_readPressure(float &_pressure)
         log_e("BME280 Sensor get data failed!");
         return ERROR_BME_DET_DATA_FAILED;
     } else {
-        log_e("BME280 Sensor get data successsfully!");
+        log_e("BME280 Sensor get data successsfully! %f", _pressure);
         return ERROR_NONE;
     }
 };

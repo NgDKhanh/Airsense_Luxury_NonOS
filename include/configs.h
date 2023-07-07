@@ -16,8 +16,9 @@
 
 #define SERIAL_DEBUG_BAUDRATE   (9600)
 
-#define ERROR_CODE int
 #define ERROR_NONE (0x00)
+
+typedef int ERROR_CODE;
 
 enum status_et
 {
@@ -50,7 +51,7 @@ const char pass[]  = "0982332457";
 //========================== DEFINE FOR LOGGING ========================
 
 #define USING_SDCARD
-// #define USING_MQTT
+#define USING_MQTT
 #define USING_RTC
 #define USING_NEXTION
 

@@ -29,7 +29,7 @@
 #define MQTT_USER   "test"
 #define MQTT_PASSWORD   "testadmin"
 
-#define MQTT_SERVER_IP_ADDRESS "103.130.212.210"
+#define MQTT_SERVER_IP_ADDRESS "103.1.238.175"
 #define MQTT_SERVER_PORT  	1885U
 
 #define ERROR_MQTT_INIT_FAILED		(0x51)

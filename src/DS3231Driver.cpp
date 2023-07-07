@@ -12,9 +12,16 @@ ERROR_CODE DS3231_init(RTC_DS3231& _realTime, NTPClient&  _timeClient, TwoWire &
 			{
 				_timeClient.update();						// cap nhat thoi gian cho RTC	
 				uint32_t epochTime_u32 = _timeClient.getEpochTime();
-				_realTime.adjust(DateTime(epochTime_u32));			// Set the date and flip the Oscillator Stop Flag
-				log_e("Updatetime DS3231....");
-				log_e("Updatetime success. Current time: %u.", _realTime.now().unixtime());
+				if (epochTime_u32 > 1600000000)
+				{
+					_realTime.adjust(DateTime(epochTime_u32));			// Set the date and flip the Oscillator Stop Flag
+					log_e("Updatetime DS3231....");
+					log_e("Updatetime success. Current time: %u.", _realTime.now().unixtime());
+				} else 
+				{
+					log_e("Get epoch time fail! Did not update to DS3231.");
+				}
+				
 			}
 			return ERROR_NONE;
 		} else 

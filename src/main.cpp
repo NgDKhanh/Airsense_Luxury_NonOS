@@ -48,17 +48,20 @@ void device_dataManagement()
 #ifdef USING_NEXTION
 void device_updateCalibrateFromScreen()
 {
-    Screen_checkCalibChanged(&calibData_st);
-    //DS3231_getStringDateTime(realTime, DateTime::TIMESTAMP_TIME , dateTime_string);	
-		createCalibDataString(dataCalib_string, calibData_st);
-		SDcard_saveStringDataToFile(&connectionStatus_st, (const char*)dataCalib_string);
+    if (Screen_checkCalibChanged(&calibData_st) == CALIB_CHANGED)
+    {
+      DS3231_getStringDateTime(realTime, DateTime::TIMESTAMP_TIME , dateTime_string);	
+      createCalibDataString(dataCalib_string, calibData_st, dateTime_string);
+      SDcard_saveStringCalibDataToFile(&connectionStatus_st, (const char*)dataCalib_string);
+
+    }
 }
 #endif
 
 void setup() {
     Serial.begin(SERIAL_DEBUG_BAUDRATE);
     log_e("Booting...");
-    //WIFI_init();
+    WIFI_init();
     Wire.begin(PIN_SDA_GPIO, PIN_SCL_GPIO, I2C_CLOCK_SPEED);
 	  DS3231_init(realTime, timeClient, Wire, connectionStatus_st);
     bme_initialize();

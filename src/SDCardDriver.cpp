@@ -123,3 +123,36 @@ ERROR_CODE SDcard_saveStringDataToFile( struct connectionStatus *_connectStatus,
 		return ERROR_SD_CARD_READ_FILE_FAILED;
 	}
 }
+
+
+ERROR_CODE SDcard_saveStringCalibDataToFile( struct connectionStatus *_connectStatus,
+										const char *fileContent_string)
+{
+	if (_connectStatus->sdCardStatus == status_et::CONNECTED)
+	{
+		File writeFile;
+		char locationFileSaveData[30] = "/";
+		strcat(locationFileSaveData, fileNameCalib);
+		writeFile = SD.open(locationFileSaveData, FILE_APPEND);		// mo file de ghi du lieu
+		if (writeFile)											// kiem tra trang thai mo file co thanh cong
+		{
+			_connectStatus->sdCardStatus = status_et::WRITING_DATA;
+			writeFile.println(fileContent_string);		// ghi chuoi ki tu chua du lieu vao file
+			writeFile.close();							// dong file
+			_connectStatus->sdCardStatus = status_et::CONNECTED;
+			log_e("%s", fileContent_string);
+			log_e("SD card write calib data to file successfully!");
+			return ERROR_NONE;
+		}
+		else
+		{
+			log_e("Can't open file to write!");
+			log_e("SD card write calib data to file failed!");
+			return ERROR_SD_CARD_FILE_NOT_FOUND;
+		}
+	} else {
+		log_e("SD card disconnected!");
+		log_e("SD card write calib data failed!");
+		return ERROR_SD_CARD_READ_FILE_FAILED;
+	}
+}

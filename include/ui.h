@@ -27,6 +27,7 @@
 #define ERROR_SCREEN_DISPLAY_SENSORDATA_FAILED 	  0x47
 
 #define CALIB_UNCHANGED							  0x48
+#define CALIB_CHANGED							  0x49
 
 
 EasyNex myNex(SCREEN_SERIAL_PORT);			// khai bao doi tuong man hinh Nextion ket noi Serial (Serial)
@@ -167,6 +168,7 @@ ERROR_CODE Screen_checkCalibChanged(struct calibData *_calibData)
 		log_e("Calibration changed!");
 		Screen_getCalibDataFromUser(_calibData);
 		myNex.writeNum("dl.calib_change.val", 0);
+		return CALIB_CHANGED;
 	}
 	else 
 	{
@@ -318,8 +320,8 @@ ERROR_CODE Screen_displaysensorData(struct sensorData *_sensorData_st, struct ca
 		myNex.writeNum("dl.nppb.val"   , _sensorData_st->o3_ppb);					// ghi gia tri O3 thoe don vi ppm ra man hinh 
 		myNex.writeStr("dl.sppb.txt"   , String(float(_sensorData_st->o3_ppb * _calibData->o3_calibA + _calibData->o3_calibB), 1U));	
 
-		myNex.writeStr("dl.sug.txt"    , String((float(_sensorData_st->o3_ppb * _calibData->o3_calibA + _calibData->o3_calibB)*1.98), 1U));
-		myNex.writeStr("dl.sppm.txt"   , String((float(_sensorData_st->o3_ppb * _calibData->o3_calibA + _calibData->o3_calibB)/1000.0), 3U));
+		myNex.writeStr("dl.sug.txt"    , String((float(_sensorData_st->o3_ppb * _calibData->o3_calibA * 1.98) + _calibData->o3_calibB), 1U));
+		myNex.writeStr("dl.sppm.txt"   , String((float(_sensorData_st->o3_ppb * _calibData->o3_calibA / 1000.0) + _calibData->o3_calibB), 3U));
 		myNex.writeStr("dl.sminppb.txt", String(_sensorData_st->o3_ppb_min, 10));
 		myNex.writeStr("dl.sminug.txt" , String(_sensorData_st->o3_ug_min, 1U));
 		myNex.writeStr("dl.sminppm.txt", String((_sensorData_st->o3_ppb_min/1000.0), 3U));

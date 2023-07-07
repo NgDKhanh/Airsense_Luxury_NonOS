@@ -18,6 +18,7 @@
 #include "globals.h"
 #include "DeviceManager.h"
 #include <SD.h>
+#include "configs.h"
 
 #define ERROR_SD_CARD_INIT_FAILED 		(0x31)
 #define ERROR_SD_CARD_READ_FILE_FAILED 	(0x32)
@@ -83,4 +84,13 @@ ERROR_CODE SDcard_saveStringDataToFile( struct connectionStatus *_connectStatus,
 										const char *fileContent_string);
 
 
+/**
+ * @brief Save calibration data to SDcard
+ * 
+ * @param[in] fileContent_string: string save to file
+ * @param[in] _connecctionStatus: pointer to struct store all connection status
+ * @return ERROR_CODE 
+ */
+ERROR_CODE SDcard_saveStringCalibDataToFile( struct connectionStatus *_connectStatus,
+										const char *fileContent_string);
 #endif

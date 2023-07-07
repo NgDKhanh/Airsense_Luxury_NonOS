@@ -1,7 +1,9 @@
 #include "DataStructure.h"
 
-ERROR_CODE createCalibDataString(char *_calibDataString, struct calibData _calibData)
+ERROR_CODE createCalibDataString(char *_calibDataString, struct calibData _calibData, const char *_dateTimeString)
 {
+    // IF USING CO2 AND PM SENSOR
+    /*
 	sprintf(_calibDataString, "%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f|%f\n",
 							  _calibData.temperature_calibA,
 							  _calibData.humidity_calibA,
@@ -16,6 +18,19 @@ ERROR_CODE createCalibDataString(char *_calibDataString, struct calibData _calib
                               _calibData.pm10_calibB,
                               _calibData.pm1_calibB,
                               _calibData.pm25_calibB,
+                              _calibData.o3_calibB );
+    */
+
+    // ELSE
+    sprintf(_calibDataString, "%s|%f|%f|%f|%f|%f|%f|%f|%f",
+                              _dateTimeString,
+							  _calibData.temperature_calibA,
+							  _calibData.humidity_calibA,
+                              _calibData.pressure_calibA,
+                              _calibData.o3_calibA,
+							  _calibData.temperature_calibB,
+							  _calibData.humidity_calibB,
+                              _calibData.humidity_calibB,
                               _calibData.o3_calibB );
 	if (_calibDataString[0] == '\0')
 	{
@@ -36,16 +51,26 @@ ERROR_CODE createSensorDataString(char *_sensorDataString,
                                   struct sensorData _sensorData_st)
 {
     strcpy(_sensorDataString, "");
-    sprintf(_sensorDataString, "%s,%s,%.1f,%.1f,%f,%f,%f,%f,%u,%u,",
+    // IF USING CO2 AND PM SENSOR
+    // sprintf(_sensorDataString, "%s,%s,%.1f,%.1f,%f,%f,%f,%f,%u,%u,",
+    //                             _nameDevice,
+    //                             _dateTimeString,
+    //                             _sensorData_st.temperature,
+    //                             _sensorData_st.humidity,
+    //                             _sensorData_st.pressure_u32,
+    //                             _sensorData_st.pm1,
+    //                             _sensorData_st.pm25,
+    //                             _sensorData_st.pm10,
+    //                             _sensorData_st.co_2_u32,
+    //                             _sensorData_st.o3_ppb);
+
+    // ELSE
+    sprintf(_sensorDataString, "%s,%s,%.1f,%.1f,%f,%u,",
                                 _nameDevice,
                                 _dateTimeString,
                                 _sensorData_st.temperature,
                                 _sensorData_st.humidity,
                                 _sensorData_st.pressure_u32,
-                                _sensorData_st.pm1,
-                                _sensorData_st.pm25,
-                                _sensorData_st.pm10,
-                                _sensorData_st.co_2_u32,
                                 _sensorData_st.o3_ppb);
     
 	if (_sensorDataString[0] == '\0')

@@ -20,7 +20,6 @@
 #include "SDCardDriver.h"
 #include "ButtonDriver.h"
 
-
 #define DEVICE_CONNECTED                ERROR_NONE
 #define ERROR_SENSOR_DISCONNECTED       (0xc1)
 #define ERROR_SENSOR_ALL_DISCONNECTED   (0xc2)
